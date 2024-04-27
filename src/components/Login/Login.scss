@@ -7,8 +7,24 @@
 }
 
 .login-container {
-    .container-right {
-        border: 1px solid red;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    padding-top: 20px;
+
+    .content-right {
         border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0 0 0/ 10%);
+        box-sizing: border-box;
+
+        .forgot-password {
+            text-decoration: none;
+
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+
+
     }
 }
