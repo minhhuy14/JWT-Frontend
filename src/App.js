@@ -1,5 +1,6 @@
 import Nav from './components/Navigation/Nav.js';
-import Login from './components/Login/Login.js'
+import Login from './components/Login/Login.js';
+import Register from './components/Register/Register.js'
 import {
   BrowserRouter as Router,
   Routes,
@@ -25,6 +26,10 @@ function App() {
           <Route path="/contact" element={'  Contact'}>
           </Route>
           <Route path="/login" element={<Login />}>
+          </Route>
+
+          <Route path="/register" element={<Register />}>
+
           </Route>
           <Route path="*" element={' Not Found'}>
 
