@@ -8,7 +8,7 @@ const Login = (props) => {
         navigate("/register")
     }
     return (
-        <div class="login-container">
+        <div className="login-container">
             <div className="container">
                 <div className="row">
                     <div className="content-left col-12 d-none col-sm-7 d-sm-block">
