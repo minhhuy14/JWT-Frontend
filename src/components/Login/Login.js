@@ -42,14 +42,20 @@ const Login = (props) => {
                 token: 'fake token'
             }
             sessionStorage.setItem('account', JSON.stringify(data));
-            navigate('/users')
+            navigate('/users');
+            window.location.reload();
         }
         else {
             toast.error(response.data.EM);
         }
     }
 
+    const handlePressEnter = (event) => {
+        if (event.keyCode === 13 && event.key === "Enter") {
+            handleLogin();
 
+        }
+    }
     return (
         <div className="login-container">
             <div className="container">
@@ -67,7 +73,7 @@ const Login = (props) => {
                             Hoi Tan IT
                         </div>
                         <input type="text" className={objValidInput.isValidValueLogin ? 'form-control' : 'is-invalid form-control'} placeholder="Email or phone number" value={valueLogin} onChange={(event) => { setValueLogin(event.target.value) }}></input>
-                        <input type="password" placeholder="Password" className={objValidInput.isValidPassword ? 'form-control' : 'is-invalid form-control'} value={password} onChange={(event) => { setPassword(event.target.value) }}></input>
+                        <input type="password" placeholder="Password" className={objValidInput.isValidPassword ? 'form-control' : 'is-invalid form-control'} value={password} onChange={(event) => { setPassword(event.target.value) }} onKeyDown={(event) => { handlePressEnter(event) }}></input>
                         <button className='btn btn-primary' onClick={() => { handleLogin() }}>Login</button>
                         <span className='text-center'><a className='forgot-password' href='#'>Forgot your password?</a></span>
                         <hr></hr>
