@@ -1,4 +1,4 @@
-import { isValidElement, useState } from 'react';
+import { isValidElement, useEffect, useState } from 'react';
 import './Login.scss';
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
@@ -56,6 +56,14 @@ const Login = (props) => {
 
         }
     }
+
+    useEffect(() => {
+
+        const session = sessionStorage.getItem('account');
+        if (session) {
+            navigate('/');
+        }
+    }, [])
     return (
         <div className="login-container">
             <div className="container">

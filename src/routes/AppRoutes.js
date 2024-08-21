@@ -15,7 +15,7 @@ const AppRoutes = () => {
             {/* Now using PrivateRoutes as a wrapper for protected components */}
             <Route path="/users" element={<PrivateRoutes element={<Users />} />} />
             <Route path="/projects" element={<PrivateRoutes element={<Project />} />} />
-
+            <Route path="/" element={'Home'} />
             <Route path="/news" element={'News'} />
             <Route path="/about" element={'About'} />
             <Route path="/contact" element={'Contact'} />
