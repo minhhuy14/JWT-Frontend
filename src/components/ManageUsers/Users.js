@@ -1,20 +1,29 @@
 import { useEffect, useState } from 'react'
 import './Users.scss';
 import { fetchAllUsers } from '../../services/userService';
+import ReactPaginate from 'react-paginate';
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentLimit, setCurrentLimit] = useState(3);
+    const [totalPages, setTotalPages] = useState(0);
     useEffect(() => {
         fetchUsers();
     }, []);
 
-    const fetchUsers = async () => {
-        let response = await fetchAllUsers();
+    const fetchUsers = async (page) => {
+        let response = await fetchAllUsers(page ? page : currentPage, currentLimit);
         if (response && response.data && response.data.EC === 0) {
-            setListUsers(response.data.DT);
-            console.log(response.data.DT);
+            setListUsers(response.data.DT.users);
+            setTotalPages(response.data.DT.totalPages);
         }
     }
+
+    const handlePageClick = async (event) => {
+        setCurrentPage(+event.selected + 1);
+        await fetchUsers(+event.selected + 1);
+    };
     return (
         <div className="container">
             <div className="manage-users-container">
@@ -50,28 +59,37 @@ const Users = (props) => {
                                                 <td>{item.email}</td>
                                                 <td>{item.username}</td>
                                                 <td>{item.Group ? item.Group.name : ''}</td>
+                                                <td>
+                                                    <button >
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button>
+
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
                                             </tr>
                                         )
                                     })}
                                 </>
                                 :
                                 <>
-                                    <span>Not found users</span>
+                                    <tr>Not found users</tr>
                                 </>
                             }
                         </tbody>
                     </table>
                 </div>
                 <div className="user-footer">
-                    <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
+                    <ReactPaginate
+                        breakLabel="..."
+                        nextLabel="next >"
+                        onPageChange={handlePageClick}
+                        pageRangeDisplayed={5}
+                        pageCount={totalPages}
+                        previousLabel="< previous"
+                        renderOnZeroPageCount={null}
+                    />
                 </div>
             </div>
         </div>
