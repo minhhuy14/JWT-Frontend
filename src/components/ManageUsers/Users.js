@@ -17,6 +17,8 @@ const Users = (props) => {
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
 
     const [dataModal, setDataModal] = useState({});
+
+    const [isShowModalUser, setShowModalUser] = useState(false);
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -44,6 +46,10 @@ const Users = (props) => {
         setIsShowModalDelete(false);
     }
 
+    const handleCloseUserModal = () => {
+        setShowModalUser(false);
+    }
+
     const handleConfirmDeleteUser = async () => {
         let response = await deleteUser(dataModal);
         if (response && response.data.EC === 0) {
@@ -54,6 +60,8 @@ const Users = (props) => {
             toast.error(response.data.EM);
         }
     }
+
+
     return (
         <>
             <div className="container">
@@ -64,7 +72,7 @@ const Users = (props) => {
                         </div>
                         <div className="actions my-3">
                             <button className="btn btn-success me-3">Refresh</button>
-                            <button className="btn btn-primary">Add new user</button>
+                            <button className="btn btn-primary" onClick={() => setShowModalUser(true)}>Add new user</button>
 
                         </div>
                     </div>
@@ -129,7 +137,10 @@ const Users = (props) => {
                 handleClose={handleCloseModal}
                 handleConfirmDelete={handleConfirmDeleteUser}
                 dataModal={dataModal} />
-            <ModalUser />
+            <ModalUser
+                title="Create new user"
+                onHide={handleCloseUserModal}
+                show={isShowModalUser} />
         </>
     )
 }
