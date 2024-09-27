@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { fetchAllUsers, deleteUser } from '../../services/userService';
 
 import ModalDelete from './ModalDelete';
+import ModalUser from './ModalUser';
 import ReactPaginate from 'react-paginate';
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
@@ -45,7 +46,7 @@ const Users = (props) => {
 
     const handleConfirmDeleteUser = async () => {
         let response = await deleteUser(dataModal);
-        if (response && response.data.EC == 0) {
+        if (response && response.data.EC === 0) {
             toast.success(response.data.EM);
             await fetchUsers();
             setIsShowModalDelete(false);
@@ -128,6 +129,7 @@ const Users = (props) => {
                 handleClose={handleCloseModal}
                 handleConfirmDelete={handleConfirmDeleteUser}
                 dataModal={dataModal} />
+            <ModalUser />
         </>
     )
 }

@@ -1,10 +1,7 @@
 
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button'
-import { useState } from 'react';
 function ModalDelete({ show, handleClose, handleConfirmDelete, dataModal }) {
-
-    const handleShow = () => { };
 
     return (
         <>
@@ -19,7 +16,7 @@ function ModalDelete({ show, handleClose, handleConfirmDelete, dataModal }) {
                         Close
                     </Button>
                     <Button variant="primary" onClick={handleConfirmDelete}>
-                        Yes
+                        Confirm
                     </Button>
                 </Modal.Footer>
             </Modal>
