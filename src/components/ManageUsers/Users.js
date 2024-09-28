@@ -16,9 +16,12 @@ const Users = (props) => {
 
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
 
-    const [dataModal, setDataModal] = useState({});
+    const [dataModalDelete, setDataModal] = useState({});
 
     const [isShowModalUser, setShowModalUser] = useState(false);
+    const [actionModalUser, setActionModalUser] = useState("CREATE");
+
+    const [dataModalUser, setDataModalUser] = useState({});
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -51,7 +54,7 @@ const Users = (props) => {
     }
 
     const handleConfirmDeleteUser = async () => {
-        let response = await deleteUser(dataModal);
+        let response = await deleteUser(dataModalDelete);
         if (response && response.data.EC === 0) {
             toast.success(response.data.EM);
             await fetchUsers();
@@ -61,6 +64,12 @@ const Users = (props) => {
         }
     }
 
+    const handleClickEditUser = (user) => {
+        setShowModalUser(true);
+        setDataModalUser(user);
+        setActionModalUser("UPDATE");
+        console.log(">>>check update user: ", user);
+    }
 
     return (
         <>
@@ -94,13 +103,13 @@ const Users = (props) => {
                                         {listUsers.map((item, index) => {
                                             return (
                                                 <tr key={`row-${index}`}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{(currentPage - 1) * currentLimit + index + 1}</td>
                                                     <td>{item.id}</td>
                                                     <td>{item.email}</td>
                                                     <td>{item.username}</td>
                                                     <td>{item.Group ? item.Group.name : ''}</td>
                                                     <td>
-                                                        < button type="button" className="btn btn-primary mx-3">   <i className="fas fa-edit"></i></button>
+                                                        < button type="button" className="btn btn-primary mx-3" onClick={() => handleClickEditUser(item)}>   <i className="fas fa-edit"></i></button>
                                                         < button type="button" className="btn btn-danger" onClick={() => handleClickDeleteUser(item)}>   <i className="fa-solid fa-trash"></i></button>
 
                                                     </td>
@@ -109,9 +118,10 @@ const Users = (props) => {
                                         })}
                                     </>
                                     :
-                                    <>
-                                        <tr>Not found users</tr>
-                                    </>
+                                    <tr>
+                                        <td colSpan="6" style={{ textAlign: "center" }}>Not found users</td>
+                                    </tr>
+
                                 }
                             </tbody>
                         </table>
@@ -136,11 +146,14 @@ const Users = (props) => {
             <ModalDelete show={isShowModalDelete}
                 handleClose={handleCloseModal}
                 handleConfirmDelete={handleConfirmDeleteUser}
-                dataModal={dataModal} />
+                dataModal={dataModalDelete} />
             <ModalUser
-                title="Create new user"
                 onHide={handleCloseUserModal}
-                show={isShowModalUser} />
+                show={isShowModalUser}
+                action={actionModalUser}
+                dataModalUser={dataModalUser}
+
+            />
         </>
     )
 }
