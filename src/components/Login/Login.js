@@ -33,9 +33,9 @@ const Login = (props) => {
             return;
         }
         let response = await loginUser(valueLogin, password);
-        console.log("res login data", response.data);
+        console.log("res login data", response);
 
-        if (response && response.data && +response.data.EC === 0) {
+        if (response && +response.EC === 0) {
 
             let data = {
                 isAuthenticated: true,
@@ -46,7 +46,7 @@ const Login = (props) => {
             window.location.reload();
         }
         else {
-            toast.error(response.data.EM);
+            toast.error(response.EM);
         }
     }
 

@@ -28,9 +28,10 @@ const Users = (props) => {
 
     const fetchUsers = async (page) => {
         let response = await fetchAllUsers(page ? page : currentPage, currentLimit);
-        if (response && response.data && response.data.EC === 0) {
-            setListUsers(response.data.DT.users);
-            setTotalPages(response.data.DT.totalPages);
+        console.log(response);
+        if (response && response && response.EC === 0) {
+            setListUsers(response.DT.users);
+            setTotalPages(response.DT.totalPages);
         }
     }
 
@@ -58,12 +59,12 @@ const Users = (props) => {
 
     const handleConfirmDeleteUser = async () => {
         let response = await deleteUser(dataModalDelete);
-        if (response && response.data.EC === 0) {
-            toast.success(response.data.EM);
+        if (response && response.EC === 0) {
+            toast.success(response.EM);
             await fetchUsers();
             setIsShowModalDelete(false);
         } else {
-            toast.error(response.data.EM);
+            toast.error(response.EM);
         }
     }
 
@@ -90,8 +91,8 @@ const Users = (props) => {
                         </div>
                         <div className="actions my-3">
                             <button className="btn btn-success me-3"
-                                onClick={() => handleRefresh()}><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
-                            <button className="btn btn-primary" onClick={() => handleClickAddNewUser()}><i class="fa-solid fa-plus"></i> Add new user</button>
+                                onClick={() => handleRefresh()}><i className="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                            <button className="btn btn-primary" onClick={() => handleClickAddNewUser()}><i className="fa-solid fa-plus"></i> Add new user</button>
 
                         </div>
                     </div>
