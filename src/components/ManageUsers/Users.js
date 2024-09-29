@@ -47,10 +47,13 @@ const Users = (props) => {
 
     const handleCloseModal = () => {
         setIsShowModalDelete(false);
+        setDataModal({});
     }
 
-    const handleCloseUserModal = () => {
+    const handleCloseUserModal = async () => {
         setShowModalUser(false);
+        setDataModalUser({});
+        await fetchUsers();
     }
 
     const handleConfirmDeleteUser = async () => {
@@ -70,7 +73,13 @@ const Users = (props) => {
         setActionModalUser("UPDATE");
         console.log(">>>check update user: ", user);
     }
-
+    const handleClickAddNewUser = () => {
+        setShowModalUser(true);
+        setActionModalUser("CREATE");
+    }
+    const handleRefresh = async () => {
+        await fetchUsers();
+    }
     return (
         <>
             <div className="container">
@@ -80,8 +89,9 @@ const Users = (props) => {
                             <h3>Table Users</h3>
                         </div>
                         <div className="actions my-3">
-                            <button className="btn btn-success me-3">Refresh</button>
-                            <button className="btn btn-primary" onClick={() => setShowModalUser(true)}>Add new user</button>
+                            <button className="btn btn-success me-3"
+                                onClick={() => handleRefresh()}><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                            <button className="btn btn-primary" onClick={() => handleClickAddNewUser()}><i class="fa-solid fa-plus"></i> Add new user</button>
 
                         </div>
                     </div>
@@ -109,8 +119,8 @@ const Users = (props) => {
                                                     <td>{item.username}</td>
                                                     <td>{item.Group ? item.Group.name : ''}</td>
                                                     <td>
-                                                        < button type="button" className="btn btn-primary mx-3" onClick={() => handleClickEditUser(item)}>   <i className="fas fa-edit"></i></button>
-                                                        < button type="button" className="btn btn-danger" onClick={() => handleClickDeleteUser(item)}>   <i className="fa-solid fa-trash"></i></button>
+                                                        < button title='Edit' type="button" className="btn btn-primary mx-3" onClick={() => handleClickEditUser(item)}>   <i className="fas fa-edit"></i></button>
+                                                        < button title='Delete' type="button" className="btn btn-danger" onClick={() => handleClickDeleteUser(item)}>   <i className="fa-solid fa-trash"></i></button>
 
                                                     </td>
                                                 </tr>

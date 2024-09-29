@@ -3,7 +3,7 @@ import Button from 'react-bootstrap/Button'
 import "./ModalUser.scss";
 import { toast } from "react-toastify";
 import { useState, useEffect } from 'react';
-import { fetchGroups, createNewUser } from "../../services/userService";
+import { fetchGroups, createNewUser, updateCurrentUser } from "../../services/userService";
 import _ from 'lodash'
 
 const ModalUser = ({ show, onHide, action, dataModalUser }) => {
@@ -39,11 +39,18 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
     }, []);
 
     useEffect(() => {
-        console.log("get data to modal user", dataModalUser);
         if (action === 'UPDATE') {
             setUserData({ ...dataModalUser, group: dataModalUser.Group ? dataModalUser.Group.id : '', gender: dataModalUser.gender });
         }
     }, [dataModalUser]);
+
+    useEffect(() => {
+        if (action === 'CREATE') {
+            if (userGroups && userGroups.length > 0)
+                setUserData({ ...userData, group: userGroups[0].id, gender: 'Male' });
+        }
+    }, [action])
+
     const getGroups = async () => {
         let res = await fetchGroups();
         if (res && res.data && res.data.EC === 0) {
@@ -59,23 +66,34 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
 
     }
     const handleConfirm = async () => {
+        console.log("check when confirm: ", userData);
         let check = checkValidateInputs();
         if (check === true) {
-            let res = await createNewUser({ ...userData, groupId: userData['group'] });
+
+            let res = action === 'CREATE' ?
+                await createNewUser({ ...userData, groupId: userData['group'] })
+                :
+                await updateCurrentUser({ ...userData, groupId: userData['group'] });
             if (res.data && res.data.EC === 0) {
                 onHide();
-                setUserData({ ...defaultUserData, group: userGroups[0].id });
+                setUserData({
+                    ...defaultUserData,
+                    group: userGroups && userGroups.length > 0 ?
+                        userGroups[0].id : ''
+                });
+                toast.success(res.data.EM);
             }
             if (res.data && res.data.EC !== 0) {
                 toast.error(res.data.EM);
                 let _validInputs = _.cloneDeep(validInputsDefault);
                 _validInputs[res.data.DT] = false;
                 setValidInputs(_validInputs);
-
             }
-
         }
+
     }
+
+
 
     const handleOnChangeInput = (name, value) => {
         let _userData = _.cloneDeep(userData);
@@ -84,6 +102,10 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
     }
 
     const checkValidateInputs = () => {
+        //edit user
+        if (action == 'UPDATE') {
+            return true;
+        }
         //create user
         setValidInputs(validInputsDefault);
         let arr = ['email', 'phone', 'username', 'password', 'address', 'gender', 'group'];
@@ -100,6 +122,12 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
             }
         }
         return check;
+    }
+
+    const handleCloseModalUser = () => {
+        onHide();
+        setUserData(defaultUserData);
+        setValidInputs(validInputsDefault);
     }
 
     return (
@@ -165,7 +193,7 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={onHide}>
+                    <Button variant="secondary" onClick={() => handleCloseModalUser()}>
                         Close
                     </Button>
                     <Button variant="primary" onClick={handleConfirm}>
