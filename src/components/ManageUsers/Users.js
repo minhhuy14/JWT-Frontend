@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import './Users.scss';
 import './Pagination.scss';
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import { fetchAllUsers, deleteUser } from '../../services/userService';
 import ModalDelete from './ModalDelete';
 import ModalUser from './ModalUser';
 import ReactPaginate from 'react-paginate';
+import { UserContext } from '../../context/UserContext';
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
 
@@ -24,7 +25,11 @@ const Users = (props) => {
     const [dataModalUser, setDataModalUser] = useState({});
     useEffect(() => {
         fetchUsers();
-    }, []);
+
+    }, [currentPage]);
+
+    const { user } = useContext(UserContext);
+    console.log("Check user context: ", user);
 
     const fetchUsers = async (page) => {
         let response = await fetchAllUsers(page ? page : currentPage, currentLimit);

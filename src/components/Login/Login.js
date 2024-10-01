@@ -1,10 +1,12 @@
-import { isValidElement, useEffect, useState } from 'react';
+import { isValidElement, useContext, useEffect, useState } from 'react';
 import './Login.scss';
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { loginUser } from '../../services/userService'
+import { UserContext } from '../../context/UserContext';
 const Login = (props) => {
 
+    let { loginContext } = useContext(UserContext);
     let navigate = useNavigate();
     const [valueLogin, setValueLogin] = useState("");
     const [password, setPassword] = useState("");
@@ -36,14 +38,19 @@ const Login = (props) => {
         console.log("res login data", response);
 
         if (response && +response.EC === 0) {
-
+            let groupWithRoles = response.DT.roles;
+            let email = response.DT.email;
+            let username = response.DT.username;
+            let token = response.DT.accessToken;
             let data = {
                 isAuthenticated: true,
-                token: 'fake token'
+                token,
+                account: { groupWithRoles, email, username }
             }
             sessionStorage.setItem('account', JSON.stringify(data));
+            loginContext(data);
             navigate('/users');
-            window.location.reload();
+            // window.location.reload();
         }
         else {
             toast.error(response.EM);
