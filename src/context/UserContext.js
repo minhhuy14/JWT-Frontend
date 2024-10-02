@@ -54,11 +54,12 @@ const UserProvider = ({ children }) => {
     }
 
     useEffect(()=>{
-        if (window.location.pathname!=='/'||window.location.pathname!=='/login'){
+     
+        if ((window.location.pathname!=='/')&&window.location.pathname!=='/login'){
             fetchUserAccount();
         }
         else{
-            setUser({...user,isLoading:false});
+            setUser({...defaultUserData,isLoading:false});
         }
         
     },[]);
