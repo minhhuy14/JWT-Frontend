@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import './Nav.scss';
 import { useLocation } from "react-router-dom";
+import { UserContext } from "../../context/UserContext";
+
+
 const Nav = (props) => {
 
-    const [isShow, setIsShow] = useState(true);
-    let location = useLocation();
-    useEffect(() => {
-        const session = sessionStorage.getItem('account');
-        if (location.pathname === '/login' || !session) {
-            setIsShow(false);
-        }
-    }, []);
-    {
+    const {user}=useContext(UserContext);
+
+    const location=useLocation();
+    
+
+    if (user&&user?.isAuthenticated===true||location.pathname=='/')
         return (
             <>
-                {isShow === true &&
                     <nav className="navbar navbar-expand-lg bg-body-tertiary">
                         <div className="container-fluid">
                             <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -25,6 +24,9 @@ const Nav = (props) => {
                                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
                                     <li className="nav-item">
                                         <a className="nav-link active" aria-current="page" href="/">Home</a>
+                                    </li>
+                                    <li className="nav-item">
+                                        <a className="nav-link" href="/users">Users</a>
                                     </li>
                                     <li className="nav-item">
                                         <a className="nav-link" href="/news">News</a>
@@ -44,9 +46,12 @@ const Nav = (props) => {
                             </div>
                         </div>
                     </nav>
-                }
+                
             </>
         );
+    else{
+
+        return <></>
     }
 }
 

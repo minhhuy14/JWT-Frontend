@@ -32,7 +32,7 @@ instance.interceptors.response.use(function (response) {
         case 401:
             {
                 toast.error("Unauthorized the user. Please login...");
-                return Promise.reject(error);
+                return error&&error.response.data;
 
             }
         case 403:

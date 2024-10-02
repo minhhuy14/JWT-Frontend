@@ -1,11 +1,20 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
+import { getUserAccount } from '../services/userService';
 
-const UserContext = createContext({ name: '', auth: false });
+const UserContext = createContext(null);
 
 const UserProvider = ({ children }) => {
+
+    const defaultUserData={   
+        isLoading:true,
+        isAuthenticated: false,
+        token: "",
+        account: {}
+    }
     // User is the name of the "data" that gets stored in context
     const [user, setUser] = useState(
-        {
+        {   
+            isLoading:true,
             isAuthenticated: false,
             token: "",
             account: {}
@@ -13,7 +22,7 @@ const UserProvider = ({ children }) => {
 
     // Login updates the user data with a name parameter
     const loginContext = (userData) => {
-        setUser(userData);
+        setUser({...userData,isLoading:false});
     };
 
     // Logout updates the user data to default
@@ -24,11 +33,41 @@ const UserProvider = ({ children }) => {
         }));
     };
 
+    const fetchUserAccount=async ()=>{
+
+        let response=await getUserAccount();
+        if (response && +response.EC === 0) {
+            let groupWithRoles = response.DT.roles;
+            let email = response.DT.email;
+            let username = response.DT.username;
+            let token = response.DT.accessToken;
+            let data = {
+                isAuthenticated: true,
+                token,
+                account: { groupWithRoles, email, username },
+                isLoading:false
+            }
+            setUser(data);  
+    }else {
+        setUser({...defaultUserData,isLoading:false});
+    };
+    }
+
+    useEffect(()=>{
+        if (window.location.pathname!=='/'||window.location.pathname!=='/login'){
+            fetchUserAccount();
+        }
+        else{
+            setUser({...user,isLoading:false});
+        }
+        
+    },[]);
     return (
         <UserContext.Provider value={{ user, loginContext, logoutContext }}>
             {children}
         </UserContext.Provider>
     );
 }
+
 
 export { UserContext, UserProvider };
