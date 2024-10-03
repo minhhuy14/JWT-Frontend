@@ -8,14 +8,13 @@
         &:hover{
             color: #61dafb !important;
         }
-        
-    }
-
-    .nav-link{
         &.active{
             color: #61dafb !important;
         }
+        cursor: pointer;
     }
+
+
     .dropdown-menu{
         a{
             color: #212529 !important;

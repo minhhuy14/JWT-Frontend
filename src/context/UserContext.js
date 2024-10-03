@@ -27,10 +27,7 @@ const UserProvider = ({ children }) => {
 
     // Logout updates the user data to default
     const logoutContext = () => {
-        setUser((user) => ({
-            name: '',
-            auth: false,
-        }));
+        setUser({...defaultUserData,isLoading:false});
     };
 
     const fetchUserAccount=async ()=>{
@@ -59,12 +56,12 @@ const UserProvider = ({ children }) => {
             fetchUserAccount();
         }
         else{
-            setUser({...defaultUserData,isLoading:false});
+            setUser({...user,isLoading:false});
         }
         
     },[]);
     return (
-        <UserContext.Provider value={{ user, loginContext, logoutContext }}>
+        <UserContext.Provider value={{ user, loginContext, logoutContext,logoutContext }}>
             {children}
         </UserContext.Provider>
     );
