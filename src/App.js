@@ -1,4 +1,4 @@
-import Nav from './components/Navigation/Nav.js';
+import NavHeader from './components/Navigation/NavHeader.js';
 import "./App.scss";
 import {
   BrowserRouter as Router
@@ -7,7 +7,7 @@ import {
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import _ from 'lodash'
 import AppRoutes from './routes/AppRoutes.js';
 import { Rings } from 'react-loader-spinner';
@@ -16,7 +16,6 @@ import { UserContext } from './context/UserContext.js';
 function App() {
 
   const {user}=useContext(UserContext);
-  const [account, setAccount] = useState({});
 
   return (
     <>
@@ -38,7 +37,7 @@ function App() {
       :
       <>
         <div className='app-header'>
-          <Nav />
+          <NavHeader />
         </div>
         <div className="App">
           <AppRoutes />
