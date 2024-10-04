@@ -5,7 +5,7 @@ import Register from '../components/Register/Register.js';
 import Users from '../components/ManageUsers/Users.js';
 import PrivateRoutes from "./PrivateRoutes.js";
 import { Audio } from 'react-loader-spinner';
-
+import Role from "../components/Role/Role.js"
 const Project = () => {
     return <span>Projects</span>;
 };
@@ -15,6 +15,7 @@ const AppRoutes = () => {
         <Routes>
             <Route path="/users" element={<PrivateRoutes element={<Users />} />} />
             <Route path="/projects" element={<PrivateRoutes element={<Project />} />} />
+            <Route path="/roles" element={<PrivateRoutes element={<Role />} />} />
             <Route path="/" element={'Home'} />
             <Route path="/news" element={'News'} />
             <Route path="/about" element={'About'} />

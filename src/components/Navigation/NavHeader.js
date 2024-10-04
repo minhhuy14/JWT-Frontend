@@ -49,6 +49,7 @@ const NavHeader = (props) => {
           <Nav className="me-auto">
             <Nav.Link href="/" >Home</Nav.Link>
             <Nav.Link href="/users">Users</Nav.Link>
+            <Nav.Link href="/roles">Roles</Nav.Link>
             <Nav.Link href="/projects">Projects</Nav.Link>
            
           </Nav>
