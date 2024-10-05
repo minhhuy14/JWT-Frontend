@@ -43,11 +43,9 @@ const Role = () => {
         let _listChilds = _.cloneDeep(listChilds);
         delete _listChilds[key];
         setListChilds(_listChilds);
-        console.log(key);
     }
 
     const handleSave = async () => {
-        console.log(listChilds);
         let invalidObj = Object.entries(listChilds).find(([key, child], index) => {
             return child && !child.url;
         });
@@ -56,7 +54,6 @@ const Role = () => {
         if (!invalidObj) {
             //call api
             let data = buildDataToPersist();
-            console.log(">>> check data to build: ", data);
             let res = await createRoles(data);
             if (res && res.EC === 0) {
                 toast.success(res.EM);

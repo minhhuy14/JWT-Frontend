@@ -66,7 +66,6 @@ const Register = (props) => {
             else {
                 toast.error(serverData.EM)
             }
-            console.log("res from server: ", response);
 
         }
 

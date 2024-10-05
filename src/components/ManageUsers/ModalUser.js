@@ -65,7 +65,6 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
         }
     }
     const handleConfirm = async () => {
-        console.log("check when confirm: ", userData);
         let check = checkValidateInputs();
         if (check === true) {
 

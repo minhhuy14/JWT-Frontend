@@ -29,7 +29,6 @@ const Users = (props) => {
     }, [currentPage]);
 
     const { user } = useContext(UserContext);
-    console.log("Check user context: ", user);
 
     const fetchUsers = async (page) => {
         let response = await fetchAllUsers(page ? page : currentPage, currentLimit);
@@ -76,7 +75,6 @@ const Users = (props) => {
         setShowModalUser(true);
         setDataModalUser(user);
         setActionModalUser("UPDATE");
-        console.log(">>>check update user: ", user);
     }
     const handleClickAddNewUser = () => {
         setShowModalUser(true);

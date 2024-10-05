@@ -13,7 +13,6 @@ const fetchAllRoles = () => {
 }
 
 const fetchRolesByGroup = (groupId) => {
-    console.log("Group to fetch related role: ", groupId);
     return axios.get(`/api/v1/role/by-group/${groupId}`);
 }
 

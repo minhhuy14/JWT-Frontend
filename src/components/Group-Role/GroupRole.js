@@ -41,7 +41,6 @@ const GroupRole = () => {
         setSelectGroup(value);
         if (value) {
             let response = await fetchRolesByGroup(value);
-            console.log("check roles by group: ", response.data);
             if (response && +response.EC === 0) {
                 let result = buildDataRolesByGroup(response.data.Roles, listRoles);
                 setAssignRolesByGroup(result);
@@ -93,8 +92,6 @@ const GroupRole = () => {
     }
     const handleSave = async () => {
         let data = buildDataToSave();
-        console.log("check raw data: ", assignRolesByGroup);
-        console.log("send data: ", data);
         let res = await assignRolesToGroup(data);
         if (res && res.EC === 0) {
             toast.success(res.EM);

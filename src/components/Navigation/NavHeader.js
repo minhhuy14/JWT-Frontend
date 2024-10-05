@@ -29,7 +29,7 @@ const NavHeader = (props) => {
   }
 
 
-  if ((user && user?.isAuthenticated === true) || (location.pathname == '/'))
+  if ((user && user?.isAuthenticated === true) || (location.pathname == '/') || (location.pathname == '/about'))
     return (
       <div className="nav-header">
         <Navbar bg="header" expand="lg">
@@ -52,7 +52,7 @@ const NavHeader = (props) => {
                 <Nav.Link href="/roles">Roles</Nav.Link>
                 <Nav.Link href="/group-role">Group-Role</Nav.Link>
                 <Nav.Link href="/projects">Projects</Nav.Link>
-
+                <Nav.Link href="/about">About</Nav.Link>
 
               </Nav>
 
