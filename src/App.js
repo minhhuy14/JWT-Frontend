@@ -15,39 +15,39 @@ import { UserContext } from './context/UserContext.js';
 
 function App() {
 
-  const {user}=useContext(UserContext);
+  const { user } = useContext(UserContext);
 
   return (
     <>
       <Router>
-      {user&&user.isLoading?
-        <div className='loading-container'>
-        <Rings
-      visible={true}
-      height="80"
-      width="80"
-      color="#4fa94d"
-      ariaLabel="rings-loading"
-      wrapperStyle={{}}
-      wrapperClass=""
-      />
-        <div>Loading data...</div>
-        </div>
-  
-      :
-      <>
-        <div className='app-header'>
-          <NavHeader />
-        </div>
-        <div className="App">
-          <AppRoutes />
-        </div>
-      </>
-}
+        {user && user.isLoading ?
+          <div className='loading-container'>
+            <Rings
+              visible={true}
+              height="80"
+              width="80"
+              color="#4fa94d"
+              ariaLabel="rings-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+            <div>Loading data...</div>
+          </div>
+
+          :
+          <>
+            <div className='app-header'>
+              <NavHeader />
+            </div>
+            <div className="App">
+              <AppRoutes />
+            </div>
+          </>
+        }
       </Router>
       <ToastContainer
         position="bottom-right"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick

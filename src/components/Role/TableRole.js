@@ -9,8 +9,8 @@ const TableRole = forwardRef((props, ref) => {
     const handleClickDeleteRole = async (role) => {
         let data = await deleteRole(role);
         if (data && data.EC === 0) {
-            toast.success(data.EM);
             await getAllRoles();
+            toast.success(data.EM);
         }
 
     }

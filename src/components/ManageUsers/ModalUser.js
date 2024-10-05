@@ -63,7 +63,6 @@ const ModalUser = ({ show, onHide, action, dataModalUser }) => {
         else {
             toast.error(res.EM);
         }
-
     }
     const handleConfirm = async () => {
         console.log("check when confirm: ", userData);
