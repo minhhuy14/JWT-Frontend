@@ -1,5 +1,5 @@
 ## ✨Description:
-A fullstack web application utilizing JSON Web Token for authentication and authorization management, built with React, Node.js, and Express.
+A fullstack web application utilizing JSON Web Token for authentication and authorization management, built with React, Node.js, and Express.\
 This is my individual project developed during the fullstack JWT, React, and NodeJS course from the [HoiDanIT](https://www.youtube.com/@hoidanit) channel.
 
 ### 📌Core Features:
@@ -25,7 +25,7 @@ This is my individual project developed during the fullstack JWT, React, and Nod
 4. Transpiled modern JavaScript with **Babel**.
 5. Enabled auto-reloading with **Nodemon**.
 6. Utilized **Sequelize** and **Sequelize CLI** for Object 
-7. Relational Mapping (ORM).
+7. Object Relational Mapping **(ORM)**.
 8. Implemented authentication using **jsonwebtoken**.
 9. Handled cookies with **Cookie Parser**.
 
