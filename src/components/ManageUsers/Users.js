@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useContext } from 'react'
 import './Users.scss';
 import './Pagination.scss';
 import { toast } from "react-toastify";
@@ -7,6 +7,7 @@ import { fetchAllUsers, deleteUser } from '../../services/userService';
 import ModalDelete from './ModalDelete';
 import ModalUser from './ModalUser';
 import ReactPaginate from 'react-paginate';
+import { UserContext } from '../../context/UserContext';
 const Users = (props) => {
     const [listUsers, setListUsers] = useState([]);
 
@@ -16,18 +17,24 @@ const Users = (props) => {
 
     const [isShowModalDelete, setIsShowModalDelete] = useState(false);
 
-    const [dataModal, setDataModal] = useState({});
+    const [dataModalDelete, setDataModal] = useState({});
 
     const [isShowModalUser, setShowModalUser] = useState(false);
+    const [actionModalUser, setActionModalUser] = useState("CREATE");
+
+    const [dataModalUser, setDataModalUser] = useState({});
     useEffect(() => {
         fetchUsers();
-    }, []);
+
+    }, [currentPage]);
+
+    const { user } = useContext(UserContext);
 
     const fetchUsers = async (page) => {
         let response = await fetchAllUsers(page ? page : currentPage, currentLimit);
-        if (response && response.data && response.data.EC === 0) {
-            setListUsers(response.data.DT.users);
-            setTotalPages(response.data.DT.totalPages);
+        if (response && response && response.EC === 0) {
+            setListUsers(response.DT.users);
+            setTotalPages(response.DT.totalPages);
         }
     }
 
@@ -44,24 +51,38 @@ const Users = (props) => {
 
     const handleCloseModal = () => {
         setIsShowModalDelete(false);
+        setDataModal({});
     }
 
-    const handleCloseUserModal = () => {
+    const handleCloseUserModal = async () => {
         setShowModalUser(false);
+        setDataModalUser({});
+        await fetchUsers();
     }
 
     const handleConfirmDeleteUser = async () => {
-        let response = await deleteUser(dataModal);
-        if (response && response.data.EC === 0) {
-            toast.success(response.data.EM);
+        let response = await deleteUser(dataModalDelete);
+        if (response && response.EC === 0) {
+            toast.success(response.EM);
             await fetchUsers();
             setIsShowModalDelete(false);
         } else {
-            toast.error(response.data.EM);
+            toast.error(response.EM);
         }
     }
 
-
+    const handleClickEditUser = (user) => {
+        setShowModalUser(true);
+        setDataModalUser(user);
+        setActionModalUser("UPDATE");
+    }
+    const handleClickAddNewUser = () => {
+        setShowModalUser(true);
+        setActionModalUser("CREATE");
+    }
+    const handleRefresh = async () => {
+        await fetchUsers();
+    }
     return (
         <>
             <div className="container">
@@ -71,8 +92,9 @@ const Users = (props) => {
                             <h3>Table Users</h3>
                         </div>
                         <div className="actions my-3">
-                            <button className="btn btn-success me-3">Refresh</button>
-                            <button className="btn btn-primary" onClick={() => setShowModalUser(true)}>Add new user</button>
+                            <button className="btn btn-success me-3"
+                                onClick={() => handleRefresh()}><i className="fa-solid fa-arrows-rotate"></i> Refresh</button>
+                            <button className="btn btn-primary" onClick={() => handleClickAddNewUser()}><i className="fa-solid fa-plus"></i> Add new user</button>
 
                         </div>
                     </div>
@@ -94,14 +116,14 @@ const Users = (props) => {
                                         {listUsers.map((item, index) => {
                                             return (
                                                 <tr key={`row-${index}`}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{(currentPage - 1) * currentLimit + index + 1}</td>
                                                     <td>{item.id}</td>
                                                     <td>{item.email}</td>
                                                     <td>{item.username}</td>
                                                     <td>{item.Group ? item.Group.name : ''}</td>
                                                     <td>
-                                                        < button type="button" className="btn btn-primary mx-3">   <i className="fas fa-edit"></i></button>
-                                                        < button type="button" className="btn btn-danger" onClick={() => handleClickDeleteUser(item)}>   <i className="fa-solid fa-trash"></i></button>
+                                                        < button title='Edit' type="button" className="btn btn-primary mx-3" onClick={() => handleClickEditUser(item)}>   <i className="fas fa-edit"></i></button>
+                                                        < button title='Delete' type="button" className="btn btn-danger" onClick={() => handleClickDeleteUser(item)}>   <i className="fa-solid fa-trash"></i></button>
 
                                                     </td>
                                                 </tr>
@@ -109,9 +131,10 @@ const Users = (props) => {
                                         })}
                                     </>
                                     :
-                                    <>
-                                        <tr>Not found users</tr>
-                                    </>
+                                    <tr>
+                                        <td colSpan="6" style={{ textAlign: "center" }}>Not found users</td>
+                                    </tr>
+
                                 }
                             </tbody>
                         </table>
@@ -136,11 +159,14 @@ const Users = (props) => {
             <ModalDelete show={isShowModalDelete}
                 handleClose={handleCloseModal}
                 handleConfirmDelete={handleConfirmDeleteUser}
-                dataModal={dataModal} />
+                dataModal={dataModalDelete} />
             <ModalUser
-                title="Create new user"
                 onHide={handleCloseUserModal}
-                show={isShowModalUser} />
+                show={isShowModalUser}
+                action={actionModalUser}
+                dataModalUser={dataModalUser}
+
+            />
         </>
     )
 }

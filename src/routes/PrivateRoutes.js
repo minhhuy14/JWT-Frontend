@@ -1,18 +1,17 @@
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Navigate,Route } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
-const PrivateRoutes = ({ element }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(true);
+const PrivateRoutes = ({ element}) => {
+    const { user } = useContext(UserContext);
 
-    useEffect(() => {
-        const session = sessionStorage.getItem('account');
-        if (!session) {
-            setIsAuthenticated(false);
-        }
-    }, []);
+    if (user&&user?.isAuthenticated===true){
+            return element;
+    }
 
-    // If authenticated, render the protected component
-    return isAuthenticated ? element : <Navigate to="/login" />;
+    return <Navigate to="/login"></Navigate>
+    
+  
 };
 
 export default PrivateRoutes;

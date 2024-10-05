@@ -1,5 +1,5 @@
-import Nav from './components/Navigation/Nav.js';
-
+import NavHeader from './components/Navigation/NavHeader.js';
+import "./App.scss";
 import {
   BrowserRouter as Router
 } from "react-router-dom";
@@ -7,32 +7,47 @@ import {
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import _ from 'lodash'
 import AppRoutes from './routes/AppRoutes.js';
+import { Rings } from 'react-loader-spinner';
+import { UserContext } from './context/UserContext.js';
+
 function App() {
 
-  const [account, setAccount] = useState({});
+  const { user } = useContext(UserContext);
 
-  useEffect(() => {
-    let session = sessionStorage.getItem('account');
-    if (session) {
-      setAccount(JSON.parse(session));
-    }
-  }, [])
   return (
     <>
       <Router>
-        <div className='app-header'>
-          <Nav />
-        </div>
-        <div className="App">
-          <AppRoutes />
-        </div>
+        {user && user.isLoading ?
+          <div className='loading-container'>
+            <Rings
+              visible={true}
+              height="80"
+              width="80"
+              color="#4fa94d"
+              ariaLabel="rings-loading"
+              wrapperStyle={{}}
+              wrapperClass=""
+            />
+            <div>Loading data...</div>
+          </div>
+
+          :
+          <>
+            <div className='app-header'>
+              <NavHeader />
+            </div>
+            <div className="App">
+              <AppRoutes />
+            </div>
+          </>
+        }
       </Router>
       <ToastContainer
         position="bottom-right"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -42,8 +57,6 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
-      <ToastContainer />
     </>
   );
 }

@@ -1,10 +1,12 @@
-import { isValidElement, useEffect, useState } from 'react';
+import { isValidElement, useContext, useEffect, useState } from 'react';
 import './Login.scss';
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { loginUser } from '../../services/userService'
+import { UserContext } from '../../context/UserContext';
 const Login = (props) => {
 
+    let { loginContext } = useContext(UserContext);
     let navigate = useNavigate();
     const [valueLogin, setValueLogin] = useState("");
     const [password, setPassword] = useState("");
@@ -33,20 +35,25 @@ const Login = (props) => {
             return;
         }
         let response = await loginUser(valueLogin, password);
-        console.log("res login data", response.data);
+        console.log("res login data", response);
 
-        if (response && response.data && +response.data.EC === 0) {
-
+        if (response && +response.EC === 0) {
+            let groupWithRoles = response.DT.roles;
+            let email = response.DT.email;
+            let username = response.DT.username;
+            let token = response.DT.accessToken;
             let data = {
                 isAuthenticated: true,
-                token: 'fake token'
+                token,
+                account: { groupWithRoles, email, username }
             }
-            sessionStorage.setItem('account', JSON.stringify(data));
+            localStorage.setItem('jwt',token);
+            loginContext(data);
             navigate('/users');
-            window.location.reload();
+            toast.success("Login successfully!");
         }
         else {
-            toast.error(response.data.EM);
+            toast.error(response.EM);
         }
     }
 
@@ -57,13 +64,6 @@ const Login = (props) => {
         }
     }
 
-    useEffect(() => {
-
-        const session = sessionStorage.getItem('account');
-        if (session) {
-            navigate('/');
-        }
-    }, [])
     return (
         <div className="login-container">
             <div className="container">
