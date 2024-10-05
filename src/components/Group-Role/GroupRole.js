@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { fetchAllRoles, fetchRolesByGroup } from "../../services/roleService";
 import _ from "lodash";
+import { assignRolesToGroup } from "../../services/roleService";
 
 const GroupRole = () => {
 
@@ -11,7 +12,7 @@ const GroupRole = () => {
     const [selectGroup, setSelectGroup] = useState("");
     const [listRoles, setListRoles] = useState([]);
 
-    const [assginRolesByGroup, setAssignRolesByGroup] = useState([]);
+    const [assignRolesByGroup, setAssignRolesByGroup] = useState([]);
 
     useEffect(() => {
         getGroups();
@@ -68,18 +69,42 @@ const GroupRole = () => {
     }
 
     const handleSelectRole = (value) => {
-        const _assignRoleByGroup = _.cloneDeep(assginRolesByGroup);
+        const _assignRoleByGroup = _.cloneDeep(assignRolesByGroup);
         let foundIndex = _assignRoleByGroup.findIndex(item => +item.id === +value);
         if (foundIndex > -1) {
             _assignRoleByGroup[foundIndex].isAssigned = !_assignRoleByGroup[foundIndex].isAssigned;
         }
         setAssignRolesByGroup(_assignRoleByGroup);
     }
+
+    const buildDataToSave = () => {
+        let result = {};
+        const _assignRoleByGroup = _.cloneDeep(assignRolesByGroup);
+        result.selectGroup = selectGroup;
+        let groupRoles = _assignRoleByGroup.filter(item => item.isAssigned === true);
+        let finalGroupRoles = groupRoles.map(item => {
+            let data = { groupId: +selectGroup, roleId: +item.id };
+            return data;
+        }
+        );
+        console.log("Final group roles: ", finalGroupRoles);
+        result.groupRoles = finalGroupRoles;
+        return result;
+    }
+    const handleSave = async () => {
+        let data = buildDataToSave();
+        console.log("check raw data: ", assignRolesByGroup);
+        console.log("send data: ", data);
+        let res = await assignRolesToGroup(data);
+        if (res && res.EC === 0) {
+            toast.success(res.EM);
+        }
+    }
     return (
         <div className="group-role-container">
             <div className="container mt-3">
                 <h4>Group Role:</h4>
-                <div className="assgin-group-role">
+                <div className="assign-group-role">
                     <div className="col-12 col-sm-6 form-group">
                         <label>Group (<span className="red">*</span>)</label>
                         <select className='form-select'
@@ -100,8 +125,8 @@ const GroupRole = () => {
                         <div className="roles">
                             <h5>Assign Roles:</h5>
                             {
-                                assginRolesByGroup && assginRolesByGroup.length > 0
-                                && assginRolesByGroup.map((item, index) => {
+                                assignRolesByGroup && assignRolesByGroup.length > 0
+                                && assignRolesByGroup.map((item, index) => {
                                     return (
                                         <div className="form-check" key={`list-role-${index}`}>
                                             <input className="form-check-input"
@@ -121,7 +146,7 @@ const GroupRole = () => {
                         </div>
                     }
                     <div className="mt-3">
-                        <button className="btn btn-warning">Save</button>
+                        <button className="btn btn-warning" onClick={() => handleSave()}>Save</button>
                     </div>
                 </div>
 
